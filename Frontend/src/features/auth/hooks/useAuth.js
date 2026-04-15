@@ -29,6 +29,7 @@ export const useAuth = () => {
             setUser(data.user)
         } catch (err) {
 
+            
         } finally {
             setLoading(false)
         }

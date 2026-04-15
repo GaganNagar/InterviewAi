@@ -31,19 +31,19 @@ const Register = () => {
                     <div className="input-group">
                         <label htmlFor="username">Username</label>
                         <input
-                            onChange={(e) => { setUsername(e.target.value) }}
+                            onChange={(e) => { setUsername(e.target.value) }} value={username}
                             type="text" id="username" name='username' placeholder='Enter username' />
                     </div>
                     <div className="input-group">
                         <label htmlFor="email">Email</label>
                         <input
-                            onChange={(e) => { setEmail(e.target.value) }}
+                            onChange={(e) => { setEmail(e.target.value) }} value={email}
                             type="email" id="email" name='email' placeholder='Enter email address' />
                     </div>
                     <div className="input-group">
                         <label htmlFor="password">Password</label>
                         <input
-                            onChange={(e) => { setPassword(e.target.value) }}
+                            onChange={(e) => { setPassword(e.target.value) }} value={password}
                             type="password" id="password" name='password' placeholder='Enter password' />
                     </div>
 
