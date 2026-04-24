@@ -44,9 +44,9 @@ async function registerUserController(req, res) {
 
     res.cookie("token", token, {
   httpOnly: true,
-  secure: true,      // HTTPS ke liye zaroori (Render HTTPS hai)
-  sameSite: "None",  // Cross-site requests allow karne ke liye
-  maxAge: 24 * 60 * 60 * 1000 // 1 day
+  secure: true,
+  sameSite: "none",
+  path: "/"
 });
 
     res.status(201).json({
@@ -92,13 +92,14 @@ async function loginUserController(req, res) {
     )
 
     console.log(token)
-    res.cookie("token", token, 
-        {
+
+    res.cookie("token", token, {
   httpOnly: true,
-  secure: true,      // HTTPS ke liye zaroori (Render HTTPS hai)
-  sameSite: "None",  // Cross-site requests allow karne ke liye
-  maxAge: 24 * 60 * 60 * 1000 // 1 day
+  secure: true,
+  sameSite: "none",
+  path: "/"
 });
+
     res.status(200).json({
         message: "User loggedIn successfully.",
         user: {
