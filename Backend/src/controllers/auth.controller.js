@@ -91,13 +91,14 @@ async function loginUserController(req, res) {
         { expiresIn: "1d" }
     )
 
-    res.cookie("token", token, {
+    console.log(token)
+    res.cookie("token", token, 
+        {
   httpOnly: true,
   secure: true,      // HTTPS ke liye zaroori (Render HTTPS hai)
   sameSite: "None",  // Cross-site requests allow karne ke liye
   maxAge: 24 * 60 * 60 * 1000 // 1 day
 });
-    
     res.status(200).json({
         message: "User loggedIn successfully.",
         user: {
@@ -128,6 +129,7 @@ async function logoutUserController(req, res) {
     })
 }
 
+
 /**
  * @name getMeController
  * @description get the current logged in user details.
@@ -137,8 +139,6 @@ async function getMeController(req, res) {
 
     const user = await userModel.findById(req.user.id)
 
-
-
     res.status(200).json({
         message: "User details fetched successfully",
         user: {
@@ -147,7 +147,6 @@ async function getMeController(req, res) {
             email: user.email
         }
     })
-
 }
 
 

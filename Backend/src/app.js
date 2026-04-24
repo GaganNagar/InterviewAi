@@ -6,11 +6,22 @@ const app = express()
 
 app.use(express.json())
 app.use(cookieParser())
+
+const allowedOrigins = [
+  "https://careerway-ai.vercel.app",
+  "http://localhost:5173"
+];
+
 app.use(cors({
-    origin: 'https://careerway-ai.vercel.app',
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-}))
+  origin: function(origin, callback){
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
 
 /* require all the routes here */
 const authRouter = require("./routes/auth.routes")
