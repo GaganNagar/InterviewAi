@@ -9,8 +9,8 @@ app.use(express.json())
 app.use(cookieParser())
 
 const allowedOrigins = [
-  "https://careerway-ai.vercel.app",
-  "http://localhost:5173"
+  "https://careerway-ai.vercel.app"
+//   "http://localhost:5173"
 ];
 
 app.use(cors({
