@@ -50,17 +50,17 @@ export async function login({ email, password }) {
 
 }
 
-export async function logout() {
-    try {
+// export async function logout() {
+//     try {
 
-        const response = await api.get("/api/auth/logout")
+//         const response = await api.get("/api/auth/logout")
 
-        return response.data
+//         return response.data
 
-    } catch (err) {
+//     } catch (err) {
 
-    }
-}
+//     }
+// }
 
 export async function getMe() {
 

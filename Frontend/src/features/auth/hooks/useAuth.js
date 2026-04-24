@@ -15,7 +15,8 @@ export const useAuth = () => {
         try {
             const data = await login({ email, password })
             localStorage.setItem("token", data.token)
-            setUser(data.user)
+            const userData = await getMe()
+            setUser(userData.user)
         } catch (err) {
 
         } finally {
@@ -28,10 +29,11 @@ export const useAuth = () => {
         try {
             const data = await register({ username, email, password })
             localStorage.setItem("token", data.token)
-            setUser(data.user)
+            const userData = await getMe()
+            setUser(userData.user)
         } catch (err) {
+            console.log(err.response?.data || err.message);
 
-            
         } finally {
             setLoading(false)
         }
@@ -40,39 +42,39 @@ export const useAuth = () => {
     const handleLogout = async () => {
         setLoading(true)
         try {
-            const data = await logout()
-            setUser(null)
+            // const data = await logout()
             localStorage.removeItem("token");
-        } catch (err) {
-
-        } finally {
-            setLoading(false)
-        }
-    }
-
-   useEffect(() => {
-
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-        setLoading(false);
-        return;
-    }
-
-    const getAndSetUser = async () => {
-        try {
-            const data = await getMe()
-            setUser(data.user)
-        } catch (err) {
             setUser(null)
+        } catch (err) {
+            console.log(err.response?.data || err.message);
         } finally {
             setLoading(false)
         }
     }
 
-    getAndSetUser()
+    useEffect(() => {
 
-}, [])
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            setLoading(false);
+            return;
+        }
+
+        const getAndSetUser = async () => {
+            try {
+                const userData = await getMe()
+                setUser(userData.user)
+            } catch (err) {
+                setUser(null)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        getAndSetUser()
+
+    }, [])
 
     return { user, loading, handleRegister, handleLogin, handleLogout }
 }
