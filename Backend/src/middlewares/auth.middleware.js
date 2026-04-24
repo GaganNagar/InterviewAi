@@ -1,43 +1,40 @@
-const jwt = require("jsonwebtoken")
-const tokenBlacklistModel = require("../models/blacklist.model")
-
-
+const jwt = require("jsonwebtoken");
+const tokenBlacklistModel = require("../models/blacklist.model");
 
 async function authUser(req, res, next) {
 
-    const token = req.cookies.token
+    // 🔥 header se token le
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
         return res.status(401).json({
             message: "Token not provided."
-        })
+        });
     }
 
-    const isTokenBlacklisted = await tokenBlacklistModel.findOne({
-        token
-    })
+    const token = authHeader.split(" ")[1];
+
+    // 🔥 blacklist check (same rahega)
+    const isTokenBlacklisted = await tokenBlacklistModel.findOne({ token });
 
     if (isTokenBlacklisted) {
         return res.status(401).json({
-            message: "token is invalid"
-        })
+            message: "Token is invalid"
+        });
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        req.user = decoded
+        req.user = decoded;
 
-        next()
+        next();
 
     } catch (err) {
-
         return res.status(401).json({
             message: "Invalid token."
-        })
+        });
     }
-
 }
-
 
 module.exports = { authUser }
