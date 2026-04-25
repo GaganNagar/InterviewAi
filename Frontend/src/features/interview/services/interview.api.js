@@ -5,6 +5,15 @@ const api = axios.create({
     // withCredentials: true,
 })
 
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+});
 
 /**
  * @description Service to generate interview report based on user self description, resume and job description.
@@ -31,10 +40,11 @@ export const generateInterviewReport = async ({ jobDescription, selfDescription,
  * @description Service to get interview report by interviewId.
  */
 export const getInterviewReportById = async (interviewId) => {
-    const response = await api.get(`/api/interview/report/${interviewId}`)
+    if (!interviewId) return;
 
-    return response.data
-}
+    const response = await api.get(`/api/interview/report/${interviewId}`);
+    return response.data;
+};
 
 
 /**
