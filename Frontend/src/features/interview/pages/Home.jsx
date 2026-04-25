@@ -217,7 +217,7 @@ const Home = () => {
                             <motion.div 
                                 key={report._id} 
                                 whileHover={{ y: -5 }}
-                                onClick={() => navigate(`/interview/${report._id}`)}
+                                onClick={() => navigate(`/report/${report._id}`)}
                                 className="bg-[#1c1c1c] p-6 rounded-2xl border border-white/5 cursor-pointer hover:border-primary/50 transition-all group"
                             >
                                 <h3 className="text-lg text-white font-bold group-hover:text-primary transition-colors">{report.title || 'Untitled Position'}</h3>
