@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 const Hero = () => {
   return (
@@ -101,7 +101,7 @@ const Hero = () => {
         <div className="w-full lg:w-[52%]">
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-200/50">
             <img
-              src="/report_Preview.png"
+              src="/heroReport.png"
               alt="InterviewAI report preview"
               className="h-auto w-full"
             />
