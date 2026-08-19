@@ -65,13 +65,20 @@ const HowItWorks = () => {
         </div>
 
         {/* Steps */}
-        <div className="mt-14 grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-          {steps.map((step) => (
-            <StepCard
-              key={step.number}
-              step={step}
-            />
-          ))}
+        <div className="relative mt-14">
+
+          {/* Connector Line - Desktop */}
+          <div className="absolute left-[12.5%] right-[12.5%] top-12 hidden h-px bg-indigo-100 lg:block" />
+
+          <div className="relative grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            {steps.map((step) => (
+              <StepCard
+                key={step.number}
+                step={step}
+              />
+            ))}
+          </div>
+
         </div>
 
       </div>

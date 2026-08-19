@@ -3,6 +3,8 @@ import { useInterview } from '../hooks/useInterview.js'
 import { useNavigate } from 'react-router'
 import { motion } from 'framer-motion'
 import { useAuth } from '../../auth/hooks/useAuth.js'
+import InterviewWorkspace from '../components/InterviewWorkspace.jsx'
+import RecentReports from '../components/RecentReports.jsx'
 
 const Home = () => {
     const { loading, generateReport, reports } = useInterview()
@@ -129,70 +131,17 @@ const Home = () => {
                 transition={{ duration: 0.4, delay: 0.1 }}
                 className="max-w-6xl mx-auto mx-4 bg-[#1c1c1c] rounded-3xl overflow-hidden shadow-2xl border border-white/5"
             >
-                <div className="flex flex-col lg:flex-row">
-                    <div className="flex-1 p-8 border-r border-white/5">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="p-2 bg-primary/10 text-primary rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
-                            </div>
-                            <h2 className="text-xl font-bold text-white">Target Job Description</h2>
-                            <span className="bg-primary/20 text-primary text-[10px] uppercase font-bold px-2 py-1 rounded">Required</span>
-                        </div>
-                        <textarea
-                            onChange={(e) => setJobDescription(e.target.value)}
-                            className="w-full h-80 bg-[#141414] border border-white/10 rounded-2xl p-5 text-gray-300 outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
-                            placeholder="Paste the full job description here..."
-                            maxLength={5000}
-                        />
-                        <div className="text-right text-xs text-gray-500 mt-2">{jobDescription.length} / 5000 chars</div>
-                    </div>
+                <div>
 
-                    <div className="flex-1 p-8 bg-[#212121]/30">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="p-2 bg-blue-500/10 text-blue-500 rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-                            </div>
-                            <h2 className="text-xl font-bold text-white">Your Profile</h2>
-                        </div>
-
-                        <div className="mb-6">
-                            <label className="block text-sm font-semibold mb-3 text-gray-300">
-                                Upload Resume <span className="text-primary text-[10px] ml-2 font-bold uppercase tracking-wider">Best Results</span>
-                            </label>
-                            <label className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-8 cursor-pointer transition-all ${fileName ? 'border-primary/50 bg-primary/5' : 'border-white/10 hover:border-primary/30 bg-[#141414]'}`} htmlFor="resume">
-                                <div className={`p-4 rounded-full mb-3 ${fileName ? 'bg-primary text-white' : 'bg-white/5 text-gray-400'}`}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
-                                </div>
-                                <p className="text-sm font-bold text-center text-gray-600 leading-tight px-2">
-                                    {fileName ? fileName : "Click to upload or drag & drop"}
-                                </p>
-                                <p className="text-xs text-gray-500 mt-1 uppercase tracking-tight">PDF or DOCX (Max 5MB)</p>
-                                <input ref={resumeInputRef} onChange={handleFileChange} hidden type="file" id="resume" accept=".pdf,.docx" />
-                            </label>
-                        </div>
-
-                        <div className="relative my-8 text-center">
-                            <hr className="border-white/5" />
-                            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#1c1c1c] px-4 text-xs font-bold text-gray-500 tracking-widest">OR</span>
-                        </div>
-
-                        <div className="mb-6">
-                            <label className="block text-sm font-semibold mb-3 text-gray-300" htmlFor="selfDescription">Quick Self-Description</label>
-                            <textarea
-                                onChange={(e) => setSelfDescription(e.target.value)}
-                                id="selfDescription"
-                                className="w-full h-32 bg-[#141414] border border-white/10 rounded-2xl p-4 text-gray-300 outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
-                                placeholder="Describe your experience briefly..."
-                            />
-                        </div>
-
-                        <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl border border-white/5">
-                            <div className="text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>
-                            </div>
-                            <p className="text-xs text-gray-400">Either a <strong>Resume</strong> or a <strong>Self Description</strong> is required.</p>
-                        </div>
-                    </div>
+                <InterviewWorkspace
+                    jobDescription={jobDescription}
+                    setJobDescription={setJobDescription}
+                    selfDescription={selfDescription}
+                    setSelfDescription={setSelfDescription}
+                    fileName={fileName}
+                    resumeInputRef={resumeInputRef}
+                    handleFileChange={handleFileChange}
+                    />
                 </div>
 
                 <div className="bg-[#141414] p-6 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-white/5">
@@ -212,27 +161,7 @@ const Home = () => {
             {reports.length > 0 && (
                 <section className="max-w-6xl mx-auto px-6 mt-16">
                     <h2 className="text-2xl font-bold mb-8">My Recent Interview Plans</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {reports.map((report) => (
-                            <motion.div 
-                                key={report._id} 
-                                whileHover={{ y: -5 }}
-                                onClick={() => navigate(`/report/${report._id}`)}
-                                className="bg-[#1c1c1c] p-6 rounded-2xl border border-white/5 cursor-pointer hover:border-primary/50 transition-all group"
-                            >
-                                <h3 className="text-lg text-white font-bold group-hover:text-primary transition-colors">{report.title || 'Untitled Position'}</h3>
-                                <p className="text-xs text-gray-500 mt-1 mb-4 italic">Generated on {new Date(report.createdAt).toLocaleDateString()}</p>
-                                <div className="flex items-center justify-between">
-                                    <div className={`text-sm font-bold px-3 py-1 rounded-full ${report.matchScore >= 80 ? 'bg-green-500/10 text-green-500' : report.matchScore >= 60 ? 'bg-yellow-500/10 text-yellow-500' : 'bg-red-500/10 text-red-500'}`}>
-                                        Match: {report.matchScore}%
-                                    </div>
-                                    <div className="text-gray-600 group-hover:text-primary transition-all">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
+                    <RecentReports reports={reports} />
                 </section>
             )}
 

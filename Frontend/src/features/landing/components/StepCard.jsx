@@ -7,12 +7,12 @@ const StepCard = ({ step }) => {
     <div className="relative flex flex-col items-center text-center">
 
       {/* Icon */}
-      <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-indigo-50 bg-white text-indigo-600 shadow-sm">
+      <div className="relative z-10 flex h-24 w-24 items-center justify-center rounded-full border-4 border-indigo-50 bg-white text-indigo-600 shadow-sm">
         <Icon className="h-10 w-10" />
       </div>
 
       {/* Step Number */}
-      <div className="mt-4 flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white shadow-sm">
+      <div className="relative z-10 mt-4 flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white shadow-sm">
         {step.number}
       </div>
 
@@ -23,7 +23,7 @@ const StepCard = ({ step }) => {
           {step.title}
         </h3>
 
-        <div className="mx-auto my-4 h-1 w-10 rounded-full bg-indigo-600"></div>
+        <div className="mx-auto my-4 h-1 w-10 rounded-full bg-indigo-600" />
 
         <p className="text-sm leading-6 text-slate-600">
           {step.description}
