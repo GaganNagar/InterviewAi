@@ -3,11 +3,11 @@ import { useInterview } from "../hooks/useInterview.js";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../auth/hooks/useAuth.js";
 
-import Navbar from "../components/Navbar.jsx";
-import Header from "../components/Header.jsx";
-import InterviewWorkspace from "../components/InterviewWorkspace.jsx";
-import RecentReports from "../components/RecentReports.jsx";
-import Footer from "../components/Footer.jsx";
+import Navbar from "../components/Home/Navbar.jsx"
+import Header from "../components/Home/Header.jsx";
+import InterviewWorkspace from "../components/Home/InterviewWorkspace.jsx";
+import RecentReports from "../components/Home/RecentReports.jsx";
+import Footer from "../components/Home/Footer.jsx";
 
 const steps = [
   "Reading Resume",

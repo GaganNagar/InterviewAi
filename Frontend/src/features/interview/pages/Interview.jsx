@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { useInterview } from '../hooks/useInterview.js'
 import { useNavigate, useParams } from 'react-router'
-import { motion, AnimatePresence } from 'framer-motion'
+import MatchScore from '../components/Report/MatchScore.jsx'
+import MockInterviewCard from '../components/Report/MockInterviewCard.jsx'
+import QuestionsSection from '../components/Report/QuestionsSection.jsx'
+import QuestionCard from '../components/Report/QuestionCard.jsx'
+import ReportHeader from '../components/Report/ReportHeader.jsx'
+import ReportSidebar from '../components/Report/ReportSidebar.jsx'
+import ResumeCard from '../components/Report/ResumeCard.jsx'
+import Roadmap from '../components/Report/Roadmap.jsx'
+import RoadmapDay from '../components/Report/RoadmapDay.jsx'
+import SkillGaps from '../components/Report/SkillGaps.jsx'
+
+
 
 const NAV_ITEMS = [
     { id: 'technical', label: 'Technical Questions', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>) },
