@@ -16,7 +16,12 @@ const Interview = () => {
   const { interviewId } = useParams();
   const navigate = useNavigate();
 
-  const { getReportById, getResumePdf, loading, report } = useInterview();
+  const {
+     getReportById, 
+     getResumePdf,  
+    report,
+     reportLoading
+  } = useInterview();
   const [activeNav, setActiveNav] = useState("technical");
 
 
@@ -104,7 +109,7 @@ const Interview = () => {
     }
   };
 
-  if (loading) {
+  if (reportLoading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-50">
         <div className="text-sm font-medium text-slate-500">
