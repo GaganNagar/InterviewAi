@@ -1,59 +1,100 @@
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../auth.context";
-import { login, register, logout, getMe } from "../services/auth.api";
-
-
+import {
+    login,
+    register,
+    // logout,
+    getMe,
+} from "../services/auth.api";
 
 export const useAuth = () => {
+    const context = useContext(AuthContext);
 
-    const context = useContext(AuthContext)
-    const { user, setUser, loading, setLoading } = context
-
+    const {
+        user,
+        setUser,
+        loading,
+        setLoading,
+    } = context;
 
     const handleLogin = async ({ email, password }) => {
-        setLoading(true)
+        setLoading(true);
+
         try {
-            const data = await login({ email, password })
-            localStorage.setItem("token", data.token)
-            const userData = await getMe()
-            setUser(userData.user)
+            const data = await login({ email, password });
+
+            localStorage.setItem("token", data.token);
+
+            const userData = await getMe();
+
+            setUser(userData.user);
+
+            return true;
         } catch (err) {
+            console.log(
+                err.response?.data || err.message
+            );
 
+            return false;
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
-    const handleRegister = async ({ username, email, password }) => {
-        setLoading(true)
+    const handleRegister = async ({
+        username,
+        email,
+        password,
+    }) => {
+        setLoading(true);
+
         try {
-            const data = await register({ username, email, password })
-            localStorage.setItem("token", data.token)
-            const userData = await getMe()
-            setUser(userData.user)
-        } catch (err) {
-            console.log(err.response?.data || err.message);
+            const data = await register({
+                username,
+                email,
+                password,
+            });
 
+            localStorage.setItem("token", data.token);
+
+            const userData = await getMe();
+
+            setUser(userData.user);
+
+            return true;
+        } catch (err) {
+            console.log(
+                err.response?.data || err.message
+            );
+
+            return false;
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     const handleLogout = async () => {
-        setLoading(true)
+        setLoading(true);
+
         try {
-            // const data = await logout()
+            // await logout();
+
             localStorage.removeItem("token");
-            setUser(null)
+            setUser(null);
+
+            return true;
         } catch (err) {
-            console.log(err.response?.data || err.message);
+            console.log(
+                err.response?.data || err.message
+            );
+
+            return false;
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
-
         const token = localStorage.getItem("token");
 
         if (!token) {
@@ -63,18 +104,25 @@ export const useAuth = () => {
 
         const getAndSetUser = async () => {
             try {
-                const userData = await getMe()
-                setUser(userData.user)
+                const userData = await getMe();
+
+                setUser(userData.user);
             } catch (err) {
-                setUser(null)
+                localStorage.removeItem("token");
+                setUser(null);
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
-        }
+        };
 
-        getAndSetUser()
+        getAndSetUser();
+    }, []);
 
-    }, [])
-
-    return { user, loading, handleRegister, handleLogin, handleLogout }
-}
+    return {
+        user,
+        loading,
+        handleRegister,
+        handleLogin,
+        handleLogout,
+    };
+};

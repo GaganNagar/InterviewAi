@@ -69,8 +69,10 @@ const Home = () => {
   };
 
   const handleLogoutUser = async () => {
-    await handleLogout();
-    navigate("/");
+    const success = await handleLogout();
+    if (success) {
+      navigate("/");
+    }
   };
 
   /* Loading Screen */

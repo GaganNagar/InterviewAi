@@ -1,55 +1,44 @@
-import { useAuth } from "../hooks/useAuth";
+import React from "react";
 import { Navigate } from "react-router";
-import React from 'react';
-import { motion } from 'framer-motion';
+import { useAuth } from "../hooks/useAuth";
 
 const Protected = ({ children }) => {
-    const { loading, user } = useAuth();
+  const { loading, user } = useAuth();
 
-    // Professional Loading State
-    if (loading) {
-        return (
-            <main className="min-h-screen w-full flex flex-col justify-center items-center bg-darkBg text-white">
-                
-                <div className="w-48 h-1 bg-white/10 rounded-full overflow-hidden relative">
-                    <motion.div
-                        initial={{ left: "-100%" }}
-                        animate={{ left: "100%" }}
-                        transition={{
-                            repeat: Infinity,
-                            duration: 1.5,
-                            ease: "easeInOut"
-                        }}
-                        className="absolute top-0 w-full h-full bg-primary shadow-[0_0_15px_rgba(210,13,59,0.5)]"
-                    />
-                </div>
+  if (loading) {
+  return (
+    <main className="min-h-screen w-full flex items-center justify-center bg-darkBg px-6 text-white">
+      <div className="flex w-full max-w-sm flex-col items-center text-center">
 
-                <motion.h1
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ repeat: Infinity, duration: 0.8, repeatType: "reverse" }}
-                    className="mt-6 text-xs font-bold tracking-[0.3em] text-gray-400 uppercase"
-                >
-                    Authenticating
-                </motion.h1>
-            </main>
-        )
-    }
+        {/* Logo / Brand */}
+        <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 border border-primary/20">
+          <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+        </div>
 
-    if (!user) {
-        return <Navigate to={'/login'} />;
-    }
+        {/* Text */}
+        <h1 className="text-lg font-semibold tracking-tight">
+          Preparing your workspace
+        </h1>
 
-    // Wrap children in a motion div for a smooth entrance once authenticated
-    return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.2 }}
-        >
-            {children}
-        </motion.div>
-    );
+        <p className="mt-2 text-sm text-gray-500">
+          Verifying your session...
+        </p>
+
+        {/* Progress */}
+        <div className="mt-6 h-1 w-48 overflow-hidden rounded-full bg-white/10">
+          <div className="h-full w-1/2 rounded-full bg-primary animate-pulse" />
+        </div>
+
+      </div>
+    </main>
+  );
+}
+
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
 };
 
 export default Protected;
