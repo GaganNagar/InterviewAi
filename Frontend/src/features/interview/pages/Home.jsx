@@ -3,7 +3,7 @@ import { useInterview } from "../hooks/useInterview.js";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../auth/hooks/useAuth.js";
 
-import Navbar from "../components/Home/Navbar.jsx"
+import Navbar from "../components/Home/Navbar.jsx";
 import Header from "../components/Home/Header.jsx";
 import InterviewWorkspace from "../components/Home/InterviewWorkspace.jsx";
 import RecentReports from "../components/Home/RecentReports.jsx";
@@ -17,7 +17,12 @@ const steps = [
 ];
 
 const Home = () => {
-  const { loading, generateReport, reports } = useInterview();
+  const {
+    loading: generatingReport,
+    reportsLoading,
+    generateReport,
+    reports,
+  } = useInterview();
   const { handleLogout } = useAuth();
 
   const [jobDescription, setJobDescription] = useState("");
@@ -33,9 +38,7 @@ const Home = () => {
 
     if (loading) {
       interval = setInterval(() => {
-        setActiveStep((prev) =>
-          prev < steps.length - 1 ? prev + 1 : prev
-        );
+        setActiveStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
       }, 5000);
     }
 
@@ -53,25 +56,25 @@ const Home = () => {
   };
 
   const handleGenerateReport = async () => {
-  const resumeFile = resumeInputRef.current?.files?.[0];
+    const resumeFile = resumeInputRef.current?.files?.[0];
 
-  if (!jobDescription.trim()) {
-    alert("Please enter the job description.");
-    return;
-  }
+    if (!jobDescription.trim()) {
+      alert("Please enter the job description.");
+      return;
+    }
 
-  setActiveStep(0);
+    setActiveStep(0);
 
-  const data = await generateReport({
-    jobDescription,
-    selfDescription,
-    resumeFile,
-  });
+    const data = await generateReport({
+      jobDescription,
+      selfDescription,
+      resumeFile,
+    });
 
-  if (data?._id) {
-    navigate(`/report/${data._id}`);
-  }
-};
+    if (data?._id) {
+      navigate(`/report/${data._id}`);
+    }
+  };
 
   const handleLogoutUser = async () => {
     const success = await handleLogout();
@@ -81,11 +84,10 @@ const Home = () => {
   };
 
   /* Loading Screen */
-  if (loading) {
+  if (generatingReport) {
     return (
       <main className="flex min-h-screen w-full flex-col items-center justify-center bg-white px-6 text-slate-900">
         <div className="w-full max-w-md">
-
           {/* Progress */}
           <div className="mb-8 h-1.5 w-full overflow-hidden rounded-full bg-indigo-50">
             <div
@@ -99,15 +101,10 @@ const Home = () => {
           {/* Steps */}
           <div className="space-y-5">
             {steps.map((step, index) => (
-              <div
-                key={step}
-                className="flex items-center gap-4"
-              >
+              <div key={step} className="flex items-center gap-4">
                 <div
                   className={`h-2.5 w-2.5 rounded-full ${
-                    index <= activeStep
-                      ? "bg-indigo-600"
-                      : "bg-slate-200"
+                    index <= activeStep ? "bg-indigo-600" : "bg-slate-200"
                   }`}
                 />
 
@@ -116,8 +113,8 @@ const Home = () => {
                     index === activeStep
                       ? "text-slate-900"
                       : index < activeStep
-                      ? "text-slate-500"
-                      : "text-slate-300"
+                        ? "text-slate-500"
+                        : "text-slate-300"
                   }`}
                 >
                   {step}
@@ -143,7 +140,6 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-white">
-
       {/* Navbar */}
       <Navbar onLogout={handleLogoutUser} />
 
@@ -152,7 +148,6 @@ const Home = () => {
 
       {/* Interview Workspace */}
       <main className="mx-auto max-w-7xl px-6 pb-16 lg:px-8">
-
         <InterviewWorkspace
           jobDescription={jobDescription}
           setJobDescription={setJobDescription}
@@ -164,10 +159,29 @@ const Home = () => {
           onGenerate={handleGenerateReport}
         />
 
-        {/* Recent Reports */}
-        {reports.length > 0 && (
+        {reportsLoading ? (
           <section className="mt-16">
+            <div className="mb-7">
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                Recent Reports
+              </h2>
 
+              <p className="mt-1 text-sm text-slate-500">
+                Loading your recent interview reports...
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="space-y-4 animate-pulse">
+                <div className="h-5 w-48 rounded bg-slate-200" />
+                <div className="h-4 w-72 rounded bg-slate-100" />
+                <div className="h-16 w-full rounded-xl bg-slate-100" />
+                <div className="h-16 w-full rounded-xl bg-slate-100" />
+              </div>
+            </div>
+          </section>
+        ) : reports.length > 0 ? (
+          <section className="mt-16">
             <div className="mb-7">
               <h2 className="text-2xl font-bold tracking-tight text-slate-900">
                 Recent Reports
@@ -180,8 +194,7 @@ const Home = () => {
 
             <RecentReports reports={reports} />
           </section>
-        )}
-
+        ) : null}
       </main>
 
       {/* Footer */}

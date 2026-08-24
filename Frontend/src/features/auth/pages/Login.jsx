@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
-  const { loading, handleLogin } = useAuth();
+  const { 
+    loading:signingIn, 
+    handleLogin } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -16,7 +18,7 @@ const Login = () => {
     navigate("/home");
   };
 
-  if (loading) {
+  if (signingIn) {
     return (
       <main className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
         <div className="w-full max-w-sm text-center">
@@ -108,7 +110,7 @@ const Login = () => {
             {/* Login */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={signingIn}
               className="w-full rounded-xl bg-indigo-600 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Sign in

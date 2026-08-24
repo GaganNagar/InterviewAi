@@ -13,7 +13,7 @@ export const useInterview = () => {
         throw new Error("useInterview must be used within an InterviewProvider")
     }
 
-    const { loading, setLoading, report, setReport, reports, setReports } = context
+    const { loading, setLoading, report, setReport, reports, setReports, reportsLoading, setReportsLoading } = context
 
     const generateReport = async ({ jobDescription, selfDescription, resumeFile }) => {
         setLoading(true)
@@ -45,7 +45,7 @@ export const useInterview = () => {
     }
 
     const getReports = async () => {
-        setLoading(true)
+        setReportsLoading(true)
         let response = null
         try {
             response = await getAllInterviewReports()
@@ -53,7 +53,7 @@ export const useInterview = () => {
         } catch (error) {
             console.log(error)
         } finally {
-            setLoading(false)
+            setReportsLoading(false)
         }
 
         return response?.interviewReports || []
@@ -86,6 +86,6 @@ export const useInterview = () => {
         }
     }, [ interviewId ])
 
-    return { loading, report, reports, generateReport, getReportById, getReports, getResumePdf }
+    return { loading, report, reports, reportsLoading, generateReport, getReportById, getReports, getResumePdf }
 
 }
