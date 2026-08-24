@@ -53,20 +53,25 @@ const Home = () => {
   };
 
   const handleGenerateReport = async () => {
-    const resumeFile = resumeInputRef.current?.files?.[0];
+  const resumeFile = resumeInputRef.current?.files?.[0];
 
-    setActiveStep(0);
+  if (!jobDescription.trim()) {
+    alert("Please enter the job description.");
+    return;
+  }
 
-    const data = await generateReport({
-      jobDescription,
-      selfDescription,
-      resumeFile,
-    });
+  setActiveStep(0);
 
-    if (data?._id) {
-      navigate(`/report/${data._id}`);
-    }
-  };
+  const data = await generateReport({
+    jobDescription,
+    selfDescription,
+    resumeFile,
+  });
+
+  if (data?._id) {
+    navigate(`/report/${data._id}`);
+  }
+};
 
   const handleLogoutUser = async () => {
     const success = await handleLogout();
