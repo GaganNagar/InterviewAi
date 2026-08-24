@@ -23,6 +23,8 @@ const Home = () => {
     generateReport,
     reports,
   } = useInterview();
+
+  console.log("HOME generatingReport:", generatingReport);
   const { handleLogout } = useAuth();
 
   const [jobDescription, setJobDescription] = useState("");
@@ -36,7 +38,7 @@ const Home = () => {
   useEffect(() => {
     let interval;
 
-    if (loading) {
+    if (generatingReport) {
       interval = setInterval(() => {
         setActiveStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
       }, 5000);
@@ -45,7 +47,7 @@ const Home = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [loading]);
+  }, [generatingReport]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
