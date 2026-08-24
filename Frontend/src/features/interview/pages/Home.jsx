@@ -24,7 +24,7 @@ const Home = () => {
     reports,
   } = useInterview();
 
-  console.log("HOME generatingReport:", generatingReport);
+  
   const { handleLogout } = useAuth();
 
   const [jobDescription, setJobDescription] = useState("");
