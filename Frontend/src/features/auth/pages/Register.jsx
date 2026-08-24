@@ -22,7 +22,7 @@ const Register = () => {
     if (success) {
       navigate("/");
     }
-  };
+  };  
 
   if (loading) {
     return (
