@@ -1,86 +1,79 @@
 import React from "react";
 import StepCard from "./StepCard";
-
 import {
   UserRoundPlus,
   FileUp,
   FileChartColumn,
   Target,
+  Sparkles,
 } from "lucide-react";
 
 const steps = [
   {
     icon: UserRoundPlus,
-    title: "Add Your Details",
+    title: "Paste Job Description",
     description:
-      "Tell us about yourself, your experience, skills, and the role you're targeting.",
+      "Paste the complete target job description and requirements into the workspace.",
     number: "01",
   },
   {
     icon: FileUp,
-    title: "Upload Resume & JD",
+    title: "Upload Resume (PDF)",
     description:
-      "Upload your resume and job description so InterviewAI can understand the match.",
+      "Upload your PDF resume and optionally add highlights of your key strengths.",
     number: "02",
   },
   {
     icon: FileChartColumn,
-    title: "Generate Your Report",
+    title: "AI Synthesis & Analysis",
     description:
-      "Get your personalized analysis with match score, skill gaps, questions, and roadmap.",
+      "Gemini AI evaluates match percentage, discovers skill gaps, and formats questions.",
     number: "03",
   },
   {
     icon: Target,
-    title: "Prepare & Improve",
+    title: "Execute 7-Day Prep",
     description:
-      "Use your personalized questions and 7-day roadmap to prepare for your target role.",
+      "Follow your daily roadmap tasks, practice model answers, and export your ATS resume.",
     number: "04",
   },
 ];
 
 const HowItWorks = () => {
   return (
-    <section
-      id="how-it-works"
-      className="bg-white py-20 sm:py-24"
-    >
+    <section id="how-it-works" className="bg-white py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-
         {/* Header */}
         <div className="mx-auto max-w-2xl text-center">
-
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-600">
-            <span>✦</span>
-            HOW IT WORKS
+          <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-indigo-100 bg-indigo-50 px-3.5 py-1 text-xs font-semibold text-indigo-700">
+            <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
+            <span>HOW IT WORKS</span>
           </div>
 
-          <h2 className="text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-            Simple Steps to Smarter{" "}
-            <span className="text-indigo-600">
-              Interview Preparation
-            </span>
+          <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl">
+            Four Steps to Complete{" "}
+            <span className="text-indigo-600">Interview Readiness</span>
           </h2>
-
+          <p className="mt-3 text-sm text-slate-600">
+            From raw job posting to comprehensive interview mastery in less than 30 seconds.
+          </p>
         </div>
 
-        {/* Steps */}
-        <div className="relative mt-14">
-
+        {/* Steps Grid */}
+        <div className="relative mt-16">
           {/* Connector Line - Desktop */}
-          <div className="absolute left-[12.5%] right-[12.5%] top-12 hidden h-px bg-indigo-100 lg:block" />
+          <div className="absolute left-[12.5%] right-[12.5%] top-10 hidden h-0.5 bg-indigo-100 lg:block" />
 
           <div className="relative grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-            {steps.map((step) => (
+            {steps.map((step, index) => (
               <StepCard
                 key={step.number}
                 step={step}
+                index={index}
               />
             ))}
           </div>
-
         </div>
-
       </div>
     </section>
   );

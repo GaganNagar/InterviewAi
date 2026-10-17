@@ -1,38 +1,28 @@
-import React from 'react'
+import React from "react";
+import { Link } from "react-router";
 
 const Footer = () => {
   return (
-    <div>
-      <footer className="mt-20 border-t border-white/5 py-10 text-center">
-        <div className="mb-4 flex justify-center gap-8 text-sm text-gray-500">
-          <a
-            href="#"
-            className="transition-colors hover:text-primary"
-          >
-            Privacy Policy
-          </a>
-
-          <a
-            href="#"
-            className="transition-colors hover:text-primary"
-          >
-            Terms of Service
-          </a>
-
-          <a
-            href="#"
-            className="transition-colors hover:text-primary"
-          >
-            Help Center
-          </a>
+    <footer className="mt-20 border-t border-slate-200 bg-white py-8 text-center">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mb-4 flex justify-center gap-6 text-xs font-medium text-slate-500">
+          <Link to="/" className="transition-colors hover:text-indigo-600">
+            Home
+          </Link>
+          <Link to="/home" className="transition-colors hover:text-indigo-600">
+            Workspace
+          </Link>
+          <Link to="/profile" className="transition-colors hover:text-indigo-600">
+            Profile
+          </Link>
         </div>
 
-        <p className="text-xs text-gray-600">
-          &copy; 2026 AI Interview Strategist. Built by Gagan Nagar.
+        <p className="text-xs text-slate-400">
+          &copy; {new Date().getFullYear()} InterviewAI. All rights reserved.
         </p>
-      </footer>
-    </div>
-  )
-}
+      </div>
+    </footer>
+  );
+};
 
-export default Footer
+export default Footer;

@@ -1,77 +1,37 @@
-import axios from "axios"
-
-
-const api = axios.create({
-    baseURL: import.meta.env.VITE_BACKEND_URL,
-    // withCredentials: true
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
-});
+import api from "../../../lib/apiClient"
 
 export async function register({ username, email, password }) {
-
-    try {
-        const response = await api.post('/api/auth/register', {
-            username, email, password
-        })
-
-        return response.data
-
-    } catch (err) {
-
-        console.log(err)
-
-    }
-    
+    const response = await api.post('/api/auth/register', {
+        username,
+        email,
+        password
+    })
+    return response.data
 }
 
 export async function login({ email, password }) {
-
-    try {
-
-        const response = await api.post("/api/auth/login", {
-            email, password
-        })
-
-        return response.data
-
-    } catch (err) {
-        console.log(err)
-    }
-   
-
+    const response = await api.post("/api/auth/login", {
+        email,
+        password
+    })
+    return response.data
 }
 
 export async function logout() {
-    try {
-
-        const response = await api.get("/api/auth/logout")
-
-        return response.data
-
-    } catch (err) {
-        console.log(err)
-    }
+    const response = await api.post("/api/auth/logout")
+    return response.data
 }
 
 export async function getMe() {
+    const response = await api.get("/api/auth/get-me")
+    return response.data
+}
 
-    try {
-
-        const response = await api.get("/api/auth/get-me")
-
-        return response.data
-
-    } catch (err) {
-        console.log(err)
-    }
-
+export async function updateProfile({ username, headline, avatar }) {
+    const response = await api.put("/api/auth/profile", {
+        username,
+        headline,
+        avatar
+    })
+    return response.data
 }

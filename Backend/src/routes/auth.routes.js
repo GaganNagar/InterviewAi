@@ -11,7 +11,6 @@ const authRouter = Router()
  */
 authRouter.post("/register", authController.registerUserController)
 
-
 /**
  * @route POST /api/auth/login
  * @description login user with email and password
@@ -19,21 +18,25 @@ authRouter.post("/register", authController.registerUserController)
  */
 authRouter.post("/login", authController.loginUserController)
 
-
 /**
- * @route GET /api/auth/logout
- * @description clear token from user cookie and add the token in blacklist
- * @access public
+ * @route POST /api/auth/logout
+ * @description clear token from user authorization and add the token to blacklist
+ * @access Private
  */
-// authRouter.get("/logout", authController.logoutUserController)
-
+authRouter.post("/logout", authMiddleware.authUser, authController.logoutUserController)
 
 /**
  * @route GET /api/auth/get-me
  * @description get the current logged in user details
- * @access private
+ * @access Private
  */
 authRouter.get("/get-me", authMiddleware.authUser, authController.getMeController)
 
+/**
+ * @route PUT /api/auth/profile
+ * @description update current logged in user profile (username, headline, avatar)
+ * @access Private
+ */
+authRouter.put("/profile", authMiddleware.authUser, authController.updateProfileController)
 
 module.exports = authRouter

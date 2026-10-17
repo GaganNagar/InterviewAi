@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useInterview } from "../hooks/useInterview.js";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../auth/hooks/useAuth.js";
+import { AlertCircle } from "lucide-react";
 
 import Navbar from "../components/Home/Navbar.jsx";
 import Header from "../components/Home/Header.jsx";
@@ -10,10 +11,10 @@ import RecentReports from "../components/Home/RecentReports.jsx";
 import Footer from "../components/Home/Footer.jsx";
 
 const steps = [
-  "Reading Resume",
+  "Reading & Parsing Resume",
   "Analyzing Job Description",
   "Identifying Skill Gaps",
-  "Generating Questions",
+  "Generating Interview Strategy",
 ];
 
 const Home = () => {
@@ -22,28 +23,32 @@ const Home = () => {
     reportsLoading,
     generateReport,
     reports,
+    getReports,
   } = useInterview();
 
-  
-  const { handleLogout } = useAuth();
+  const { user, handleLogout } = useAuth();
 
   const [jobDescription, setJobDescription] = useState("");
   const [selfDescription, setSelfDescription] = useState("");
   const [fileName, setFileName] = useState("");
   const [activeStep, setActiveStep] = useState(0);
+  const [formError, setFormError] = useState("");
 
   const resumeInputRef = useRef(null);
   const navigate = useNavigate();
 
+  // Load user's recent reports on mount
+  useEffect(() => {
+    getReports();
+  }, []);
+
   useEffect(() => {
     let interval;
-
     if (generatingReport) {
       interval = setInterval(() => {
         setActiveStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
-      }, 5000);
+      }, 4000);
     }
-
     return () => {
       clearInterval(interval);
     };
@@ -51,49 +56,71 @@ const Home = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    setFormError("");
 
     if (file) {
+      if (file.type !== "application/pdf") {
+        setFormError("Only PDF resumes are supported. Please upload a .pdf file.");
+        e.target.value = "";
+        setFileName("");
+        return;
+      }
+      if (file.size > 3 * 1024 * 1024) {
+        setFormError("File size exceeds 3MB limit. Please upload a smaller PDF.");
+        e.target.value = "";
+        setFileName("");
+        return;
+      }
       setFileName(file.name);
     }
   };
 
   const handleGenerateReport = async () => {
+    setFormError("");
     const resumeFile = resumeInputRef.current?.files?.[0];
 
     if (!jobDescription.trim()) {
-      alert("Please enter the job description.");
+      setFormError("Please enter the job description to continue.");
+      return;
+    }
+
+    if (jobDescription.trim().length < 20) {
+      setFormError("Please enter a more detailed job description (at least 20 characters).");
       return;
     }
 
     setActiveStep(0);
 
-    const data = await generateReport({
-      jobDescription,
-      selfDescription,
-      resumeFile,
-    });
+    try {
+      const data = await generateReport({
+        jobDescription,
+        selfDescription,
+        resumeFile,
+      });
 
-    if (data?._id) {
-      navigate(`/report/${data._id}`);
+      if (data?._id) {
+        navigate(`/report/${data._id}`);
+      }
+    } catch (err) {
+      const msg = err?.response?.data?.message || err?.message || "Failed to generate interview report. Please try again.";
+      setFormError(msg);
     }
   };
 
   const handleLogoutUser = async () => {
-    const success = await handleLogout();
-    if (success) {
-      navigate("/");
-    }
+    await handleLogout();
+    navigate("/login");
   };
 
-  /* Loading Screen */
+  /* Loading State */
   if (generatingReport) {
     return (
-      <main className="flex min-h-screen w-full flex-col items-center justify-center bg-white px-6 text-slate-900">
-        <div className="w-full max-w-md">
-          {/* Progress */}
-          <div className="mb-8 h-1.5 w-full overflow-hidden rounded-full bg-indigo-50">
+      <main className="flex min-h-screen w-full flex-col items-center justify-center bg-slate-50 px-6 text-slate-900">
+        <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+          {/* Progress Bar */}
+          <div className="mb-8 h-2 w-full overflow-hidden rounded-full bg-indigo-50">
             <div
-              className="h-full rounded-full bg-indigo-600 transition-all duration-700"
+              className="h-full rounded-full bg-indigo-600 transition-all duration-500"
               style={{
                 width: `${((activeStep + 1) / steps.length) * 100}%`,
               }}
@@ -101,22 +128,28 @@ const Home = () => {
           </div>
 
           {/* Steps */}
-          <div className="space-y-5">
+          <div className="space-y-4">
             {steps.map((step, index) => (
-              <div key={step} className="flex items-center gap-4">
+              <div key={step} className="flex items-center gap-3">
                 <div
-                  className={`h-2.5 w-2.5 rounded-full ${
-                    index <= activeStep ? "bg-indigo-600" : "bg-slate-200"
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
+                    index < activeStep
+                      ? "bg-indigo-600 text-white"
+                      : index === activeStep
+                      ? "border-2 border-indigo-600 text-indigo-600"
+                      : "border border-slate-200 text-slate-400"
                   }`}
-                />
+                >
+                  {index < activeStep ? "✓" : index + 1}
+                </div>
 
                 <span
                   className={`text-sm font-medium ${
                     index === activeStep
-                      ? "text-slate-900"
+                      ? "text-slate-900 font-semibold"
                       : index < activeStep
-                        ? "text-slate-500"
-                        : "text-slate-300"
+                      ? "text-slate-500"
+                      : "text-slate-300"
                   }`}
                 >
                   {step}
@@ -124,32 +157,39 @@ const Home = () => {
                 </span>
 
                 {index === activeStep && (
-                  <span className="ml-auto text-[10px] font-bold uppercase tracking-wide text-indigo-600">
-                    In Progress
+                  <span className="ml-auto text-[10px] font-bold uppercase tracking-wider text-indigo-600">
+                    Running
                   </span>
                 )}
               </div>
             ))}
           </div>
-        </div>
 
-        <p className="mt-12 text-xs uppercase tracking-[0.25em] text-slate-400">
-          AI is tailoring your strategy
-        </p>
+          <p className="mt-8 text-center text-xs text-slate-400">
+            Analyzing with Gemini 2.5 Flash. This takes 20–30 seconds.
+          </p>
+        </div>
       </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navbar */}
-      <Navbar onLogout={handleLogoutUser} />
+    <div className="min-h-screen bg-slate-50">
+      {/* Navbar with real user & logout */}
+      <Navbar onLogout={handleLogoutUser} user={user} />
 
       {/* Page Header */}
-      <Header />
+      <Header user={user} />
 
-      {/* Interview Workspace */}
+      {/* Main Workspace */}
       <main className="mx-auto max-w-7xl px-6 pb-16 lg:px-8">
+        {formError && (
+          <div className="mb-6 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-medium text-red-700">
+            <AlertCircle className="h-4 w-4 shrink-0 text-red-600" />
+            <span>{formError}</span>
+          </div>
+        )}
+
         <InterviewWorkspace
           jobDescription={jobDescription}
           setJobDescription={setJobDescription}
@@ -164,32 +204,34 @@ const Home = () => {
         {reportsLoading ? (
           <section className="mt-16">
             <div className="mb-7">
-              <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+              <h2 className="text-xl font-bold tracking-tight text-slate-900">
                 Recent Reports
               </h2>
-
-              <p className="mt-1 text-sm text-slate-500">
-                Loading your recent interview reports...
+              <p className="mt-1 text-xs text-slate-500">
+                Loading your previous interview strategies...
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="space-y-4 animate-pulse">
-                <div className="h-5 w-48 rounded bg-slate-200" />
-                <div className="h-4 w-72 rounded bg-slate-100" />
-                <div className="h-16 w-full rounded-xl bg-slate-100" />
-                <div className="h-16 w-full rounded-xl bg-slate-100" />
-              </div>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs animate-pulse space-y-4"
+                >
+                  <div className="h-5 w-40 rounded bg-slate-200" />
+                  <div className="h-4 w-24 rounded bg-slate-100" />
+                  <div className="h-6 w-20 rounded bg-slate-100" />
+                </div>
+              ))}
             </div>
           </section>
         ) : reports.length > 0 ? (
           <section className="mt-16">
             <div className="mb-7">
-              <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+              <h2 className="text-xl font-bold tracking-tight text-slate-900">
                 Recent Reports
               </h2>
-
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-xs text-slate-500">
                 View and continue your previously generated interview plans.
               </p>
             </div>
